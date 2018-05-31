@@ -779,12 +779,17 @@ class Blocks:
       ))
       providers = cursor.fetchone()[0]
 
-      network_factor = min(1, self.bandwidth/(self.block_size*providers))
+      # Oversubscription = max(1, fork_count * B_size / Network Bandwidth)
+
+      network_factor = max(1, providers*self.block_size/self.bandwidth)
+      # network_factor = min(1, self.bandwidth/(self.block_size*providers))
       # network_factor = min(1, self.bandwidth/(self.block_size*providers))
       # print '--> Providers:', providers, 'Network factor:', network_factor
 
       # diff = ((self.block_size/self.bandwidth+distance/self.ping)/network_factor + self.validation_time) * 1000
-      diff = (distance * self.ping/network_factor + self.validation_time) * 1000
+      diff = (network_factor*self.block_size/self.bandwidth + distance*self.ping + self.validation_time) * 1000
+      # print '--> DIFF:', diff, 'Network factor', network_factor
+      # diff = (distance * self.ping/network_factor + self.validation_time) * 1000
       # diff = (distance * self.ping/(float(random.randint(40,100))/100) + self.validation_time) * 1000
       adopted = (miner_block[1] + diff)
       # print '--> Adopted:  ', int(adopted), 'Diff:', diff

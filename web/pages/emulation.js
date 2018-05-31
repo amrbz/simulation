@@ -343,23 +343,23 @@ export default class extends React.Component {
 
     // if (this.state.adoptions.list) {
       // for (let i = 0; i < this.state.adoptions.list.length; i +=1) {
-        let blocksQty = 0;
-        for (let i = 0; i < (this.state.maxLocalDiff)/10; i += 1) {
-          let row = [i*10];
-            this.state.blocks.list
-              // .filter((item) => item.block.adopted >= this.state.adoptions.list[i])
-              .filter((item) => item.block.adopted > this.state.slider.value + i*10)
-              .filter((item) => item.block.adopted <= this.state.slider.value + (i+1)*10)
-              .map((item, index) => {
-                blocksQty += 1;
-              })
+        // let blocksQty = 0;
+        // for (let i = 0; i < (this.state.maxLocalDiff)/10; i += 1) {
+        //   let row = [i*10];
+        //     this.state.blocks.list
+        //       // .filter((item) => item.block.adopted >= this.state.adoptions.list[i])
+        //       .filter((item) => item.block.adopted > this.state.slider.value + i*10)
+        //       .filter((item) => item.block.adopted <= this.state.slider.value + (i+1)*10)
+        //       .map((item, index) => {
+        //         blocksQty += 1;
+        //       })
               
-            console.log(blocksQty);
+        //     console.log(blocksQty);
             
-            row.push(blocksQty);
-            // row.push(blocksQty-5 > 0 ? blocksQty -5 : 0);
-          gLineData.push(row);
-        }
+        //     row.push(blocksQty);
+        //     // row.push(blocksQty-5 > 0 ? blocksQty -5 : 0);
+        //   gLineData.push(row);
+        // }
       // }
     // }
     
@@ -473,7 +473,7 @@ export default class extends React.Component {
               ) : null
             }
             
-            {
+            {/* {
               this.state.emulation ? (
                 <Chart
                   chartType="LineChart"
@@ -508,7 +508,7 @@ export default class extends React.Component {
                 />
               ) : null
             }
-            
+             */}
 
             {/* {
               this.state.emulation ? (
