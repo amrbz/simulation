@@ -1,5 +1,3 @@
 .DS_Store
 *.pyc
 app/ar
-schema.sql
-config.py

@@ -9,6 +9,7 @@ import time
 import re
 import random
 import hashlib
+import csv
 from crate import client
 from random import randint
 from geopy import distance
@@ -181,8 +182,8 @@ class Emulation:
         print '--> Nonce: ' + str(nonce) + ' ' + (12-len(str(nonce))) * '=' + ' Time: ' + str(round(mining_time, 2)) + ' Hashrate: ' + str(int(nonce/mining_time)) + ' Iteration: ' + str(i)
 
     avg_time = round(total_time/(len(nodes_ids)*int(request.json['iterations'])),2)
-    scaling_factor = round(int(request.json['blockFreq'])*int(request.json['iterations'])/avg_time,2)
-    # scaling_factor = round(int(request.json['blockFreq'])/avg_time,2)
+    # scaling_factor = round(int(request.json['blockFreq'])*int(request.json['iterations'])/avg_time,2)
+    scaling_factor = round(int(request.json['blockFreq'])/avg_time,2)
 
     print '--> Mining complete. Avg time: ', avg_time, 'Scaling factor:', scaling_factor
 
@@ -782,17 +783,34 @@ class Blocks:
       # Oversubscription = max(1, fork_count * B_size / Network Bandwidth)
 
       network_factor = max(1, providers*self.block_size/self.bandwidth)
+      # diff = (network_factor*self.block_size/self.bandwidth + distance*self.ping + self.validation_time) * 1000
+      
+      
       # network_factor = min(1, self.bandwidth/(self.block_size*providers))
       # network_factor = min(1, self.bandwidth/(self.block_size*providers))
       # print '--> Providers:', providers, 'Network factor:', network_factor
 
       # diff = ((self.block_size/self.bandwidth+distance/self.ping)/network_factor + self.validation_time) * 1000
-      diff = (network_factor*self.block_size/self.bandwidth + distance*self.ping + self.validation_time) * 1000
       # print '--> DIFF:', diff, 'Network factor', network_factor
       # diff = (distance * self.ping/network_factor + self.validation_time) * 1000
       # diff = (distance * self.ping/(float(random.randint(40,100))/100) + self.validation_time) * 1000
-      adopted = (miner_block[1] + diff)
       # print '--> Adopted:  ', int(adopted), 'Diff:', diff
+
+
+      # diff = (network_factor*self.block_size/self.bandwidth + distance*self.ping + self.validation_time) * 1000
+      propagation_delay = network_factor*self.block_size/self.bandwidth
+      transmission_delay = distance*self.ping
+      overall_delay = propagation_delay + transmission_delay + self.validation_time
+      diff = overall_delay * 1000
+      
+      # print("propagation, transmission and validation: {:.1f} ({}%), {:.1f} ({}%), {:.1f} ({}%)".format(
+      #     propagation_delay, int(100 * propagation_delay / overall_delay),
+      #     transmission_delay, int(100 * transmission_delay / overall_delay),
+      #     self.validation_time, int(100 * self.validation_time / overall_delay),
+      # ))
+
+
+      adopted = (miner_block[1] + diff)
 
 
       # cursor.execute("""REFRESH TABLE nodes""")      
